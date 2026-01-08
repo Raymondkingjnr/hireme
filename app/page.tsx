@@ -155,7 +155,7 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mx-auto">
             {Array(4)
-              .fill()
+              .fill(null)
               .map((_, i) => (
                 <div
                   key={i}

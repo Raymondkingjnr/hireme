@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { SparkleIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { GoogleIcon } from "@/app/components/icon";
+import { GoogleIcon } from "@/assets/icons/icon";
 import Link from "next/link";
 import { Iprofile } from "@/modal/types";
 

@@ -1,4 +1,8 @@
-export const GoogleIcon = ({ className }: { className?: string }) => (
+import { DetailedHTMLProps, FC, SVGProps } from "react";
+
+export const GoogleIcon: FC<
+  DetailedHTMLProps<SVGProps<SVGSVGElement>, SVGSVGElement>
+> = () => (
   <svg
     width="15px"
     height="15px"
