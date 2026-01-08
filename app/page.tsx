@@ -1,66 +1,223 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import ShinyText from "@/components/ShinyText";
+import { heroBg } from "@/assets";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { useMemo, useState } from "react";
+import AnimatedList from "@/components/AnimatedList";
+import { CustomBtn } from "./components/custom-btn";
+import { BadgeCheckIcon } from "lucide-react";
+import { TrustSafetySection } from "@/components/safety";
+import { RecentJobsSection } from "@/components/recent-jobs";
+import { Faq } from "@/components/faq";
+import { ReferralSection } from "./components/referral";
+import { ServiceAreasSection } from "./components/service-city";
+import { EmergencyServicesSection } from "./components/emergency";
+import { stories, SuccessStoriesSection } from "./components/stories";
+import { NavBar } from "./components/nav-bar";
+import { Footer } from "./components/footer";
+import { useRouter, useParams } from "next/navigation";
+
+type Trade = {
+  id: string;
+  label: string;
+};
+
+const artisans: Trade[] = [
+  { id: "electrician", label: "Electrician" },
+  { id: "plumbers", label: "Plumbers" },
+  { id: "mobile-mechanics", label: "Mobile Mechanics" },
+  { id: "house-cleaners", label: "House Cleaners" },
+  { id: "carpenters", label: "Carpenters" },
+];
+
+const allServices = [
+  { name: "Plumber", shortcut: "⌘P" },
+  { name: "Mobile Mechanics", shortcut: "⌘M" },
+  { name: "Home Tutors", shortcut: "⌘H" },
+  { name: "Electricians", shortcut: "⌘E" },
+  { name: "Cleaners", shortcut: "⌘C" },
+];
+
+export interface IReview {
+  title: string;
+  name: string;
+  occupation: string;
+  location: string;
+  review: string;
+  service: string;
+}
 
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const displayedServices = useMemo(() => {
+    if (searchQuery.trim() === "") {
+      return allServices;
+    }
+
+    return allServices.filter((service) =>
+      service.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+  const router = useRouter();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <NavBar />
+      <section
+        className=" w-full h-fit md:h-[800px] border rounded bg-cover bg-no-repeat bg-center px-5"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${heroBg.src})`,
+        }}
+      >
+        <div className="max-w-[1500px] mx-auto ">
+          <div className=" flex justify-between items-center ">
+            <div className="py-8">
+              <ShinyText
+                text=" Find trusted handymen around Enugu. "
+                speed={5}
+                className="md:text-3xl text-lg"
+              />
+            </div>
+            <main className=" flex relative w-[80px]   ">
+              <div className=" w-[50px] h-[50px] rounded-full bg-green-lightbgGreen" />
+              <div className=" w-[50px] h-[50px] absolute z-30 right-0 rounded-full bg-green-darkbggreen" />
+            </main>
+          </div>
+          <div className="max-w-3xl ">
+            <p className=" text-gray-50 leading-10 pb-6 md:text-4xl text-2xl">
+              Hire skilled electricians, plumbers, cleaners, and more — all
+              verified and available in your region for as low as ₦7,000.
+            </p>
+          </div>
+          <section className=" mt-5 flex flex-wrap gap-6 max-w-[600px]">
+            {artisans.map((t) => (
+              <div
+                key={t.id}
+                className=" border-[1px] border-gray-50 w-fit px-2 py-1 rounded-full cursor-pointer hover:bg-green-lightbgGreen hover:border-transparent transition-all duration-300"
+              >
+                <p className="font-semibold text-gray-50 text-sm hover:text-gray-700">
+                  {t.label}
+                </p>
+              </div>
+            ))}
+          </section>
+          <div>
+            <div className="max-w-4xl mt-[1rem] mb-10">
+              <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+                <CommandInput
+                  placeholder="Search for services..."
+                  value={searchQuery}
+                  onValueChange={setSearchQuery}
+                />
+                <CommandList>
+                  <CommandEmpty>No services found.</CommandEmpty>
+
+                  {displayedServices.length > 0 && (
+                    <CommandGroup heading="Popular Services">
+                      {displayedServices.map((service) => (
+                        <CommandItem key={service.name}>
+                          <span onClick={() => router.push("/market-place")}>
+                            {service.name}
+                          </span>
+                          <CommandShortcut>{service.shortcut}</CommandShortcut>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  )}
+                </CommandList>
+              </Command>
+            </div>
+
+            {/* <div className=" bg-white rounded-xl md:w-[500px] w-full">
+          <AnimatedList
+            items={stories}
+            onItemSelect={(item, index) => console.log(item, index)}
+            showGradients={true}
+            enableArrowNavigation={true}
+            displayScrollbar={false}
+          />
+        </div> */}
+          </div>
+        </div>
+      </section>
+      <div className=" max-w-[1500px] mx-auto mt-[3rem] px-5">
+        <section className="py-12 bg-gray-50">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Verified Professionals Near You
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mx-auto">
+            {Array(4)
+              .fill()
+              .map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-white p-6 gap-5 rounded-xl shadow-sm border hover:shadow-md transition"
+                >
+                  <div className=" flex  gap-3">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                    <div>
+                      <p className="font-semibold">John Doe</p>
+                      <div className=" flex items-center gap-1">
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                          Electrician
+                        </p>
+                        <BadgeCheckIcon
+                          size={17}
+                          strokeWidth={1.5}
+                          fill="green"
+                          stroke="#fff"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 text-sm mt-3">
+                    “Fast, reliable, and affordable service around Independence
+                    Layout.”
+                  </p>
+                </div>
+              ))}
+          </div>
+        </section>
+
+        <TrustSafetySection />
+
+        <RecentJobsSection />
+
+        <Faq />
+
+        <EmergencyServicesSection />
+
+        <ServiceAreasSection />
+
+        <ReferralSection />
+
+        <SuccessStoriesSection />
+
+        <section className="py-16 bg-green-lightbgGreen text-center px-3">
+          <h2 className="text-2xl font-semibold mb-4">
+            Are you a skilled worker in Enugu?
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Join hundreds of verified professionals and grow your income with
+            HireMe.
           </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+          <div className=" grid place-content-center place-items-center">
+            <CustomBtn
+              title="Register & Add Your Service"
+              className=" bg-green-darkbggreen text-green-lightbgGreen h-[45px] font-semibold"
             />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
   );
 }
