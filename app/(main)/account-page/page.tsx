@@ -6,7 +6,6 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { CustomSelect } from "@/app/components/custom-select";
@@ -15,30 +14,7 @@ import { ENUGU_LGAS } from "@/app/(auth)/account/page";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { defaultImg } from "@/assets";
-
-const validationSchema = Yup.object({
-  full_name: Yup.string()
-    .required("Full name is required")
-    .test(
-      "is-full-name",
-      "Please enter your full name (at least two words, e.g. John Doe)",
-      (value) => {
-        if (!value) return false;
-        const words = value.trim().split(/\s+/);
-        return words.length >= 2 && words.every((word) => word.length >= 2);
-      }
-    ),
-  username: Yup.string()
-    .min(3, "Username too short")
-    .required("Username is required"),
-  state: Yup.string().required("Please select your LGA"),
-  city: Yup.string().required("City is required"),
-  street: Yup.string().required("Street address is required"),
-  postal_code: Yup.string().required("postal code is required"),
-  phone_number: Yup.string()
-    .min(10, "phone number must be 11 digits")
-    .max(10, "phone number can't be more than 11 digits"),
-});
+import { accountvalidationSchema } from "./validator";
 
 const AccountPage = () => {
   const [loading, setLoading] = useState(true);
@@ -62,7 +38,7 @@ const AccountPage = () => {
       postal_code: "",
       phone_number: "",
     },
-    validationSchema,
+    validationSchema: accountvalidationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       const { error } = await supabase
         .from("profiles")
@@ -101,7 +77,7 @@ const AccountPage = () => {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "full_name, username, state, city, postal_code, street,phone_number, avatar_url"
+          "full_name, username, state, city, postal_code, street,phone_number, avatar_url",
         )
         .eq("id", user.id)
         .single();
@@ -197,7 +173,7 @@ const AccountPage = () => {
       if (updateError) throw updateError;
 
       setProfile((prev) =>
-        prev ? { ...prev, avatar_url: data.publicUrl } : null
+        prev ? { ...prev, avatar_url: data.publicUrl } : null,
       );
       setAvatarUrl(data.publicUrl);
       toast.success("Avatar updated!");
@@ -238,9 +214,9 @@ const AccountPage = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.full_name && formik.errors.full_name
-                      ? formik.errors.full_name
-                      : undefined
+                    formik.touched.full_name && formik.errors.full_name ?
+                      formik.errors.full_name
+                    : undefined
                   }
                 />
 
@@ -253,9 +229,9 @@ const AccountPage = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.username && formik.errors.username
-                      ? formik.errors.username
-                      : undefined
+                    formik.touched.username && formik.errors.username ?
+                      formik.errors.username
+                    : undefined
                   }
                 />
 
@@ -267,9 +243,9 @@ const AccountPage = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={
-                      formik.touched.state && formik.errors.state
-                        ? formik.errors.state
-                        : undefined
+                      formik.touched.state && formik.errors.state ?
+                        formik.errors.state
+                      : undefined
                     }
                     options={ENUGU_LGAS}
                     placeholder="Select your LGA"
@@ -283,9 +259,9 @@ const AccountPage = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={
-                      formik.touched.city && formik.errors.city
-                        ? formik.errors.city
-                        : undefined
+                      formik.touched.city && formik.errors.city ?
+                        formik.errors.city
+                      : undefined
                     }
                   />
                 </div>
@@ -301,9 +277,9 @@ const AccountPage = () => {
                   className=" w-full"
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.phone_number && formik.errors.phone_number
-                      ? formik.errors.phone_number
-                      : undefined
+                    formik.touched.phone_number && formik.errors.phone_number ?
+                      formik.errors.phone_number
+                    : undefined
                   }
                 />
                 <CustomInput
@@ -315,9 +291,9 @@ const AccountPage = () => {
                   className=" w-full"
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.street && formik.errors.street
-                      ? formik.errors.street
-                      : undefined
+                    formik.touched.street && formik.errors.street ?
+                      formik.errors.street
+                    : undefined
                   }
                 />
                 <CustomInput
@@ -329,9 +305,9 @@ const AccountPage = () => {
                   className=" w-full"
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.postal_code && formik.errors.postal_code
-                      ? formik.errors.state
-                      : undefined
+                    formik.touched.postal_code && formik.errors.postal_code ?
+                      formik.errors.state
+                    : undefined
                   }
                 />
               </form>
@@ -362,12 +338,11 @@ const AccountPage = () => {
             </div>
           </div>
           <div className="col-span-4 mt-8">
-            {loading ? (
+            {loading ?
               <div className=" flex items-center justify-center">
                 <Skeleton className="w-20 h-20 rounded-full " />
               </div>
-            ) : (
-              <div className="flex flex-col items-center gap-3">
+            : <div className="flex flex-col items-center gap-3">
                 <div className="relative">
                   <Image
                     src={avatarUrl || profile?.avatar_url || defaultImg}
@@ -393,7 +368,9 @@ const AccountPage = () => {
                       className="text-white font-medium cursor-pointer "
                       htmlFor="avatar-upload"
                     >
-                      {uploading ? <Spinner /> : "Upload"}
+                      {uploading ?
+                        <Spinner />
+                      : "Upload"}
                     </label>
                     <input
                       ref={fileInputRef}
@@ -407,7 +384,7 @@ const AccountPage = () => {
                   </div>
                 </div>
               </div>
-            )}
+            }
           </div>
         </main>
       </div>

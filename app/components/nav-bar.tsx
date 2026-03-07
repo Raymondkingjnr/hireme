@@ -16,7 +16,7 @@ import { type User } from "@supabase/supabase-js";
 
 const navLinks = [
   { id: 1, text: "home", href: "/" },
-  { id: 2, text: "Community", href: "/community" },
+  { id: 2, text: "Artisians", href: "/market-place" },
   { id: 4, text: "blog", href: "/blog" },
   { id: 3, text: "contact", href: "/contact" },
 ];
@@ -117,9 +117,9 @@ export const NavBar = () => {
 
         <div className="hidden lg:flex items-center gap-6">
           <Review />
-          {user && loading ? (
+          {user && loading ?
             <Skeleton className=" w-[30px] h-[30px] rounded-full" />
-          ) : profile ? (
+          : profile ?
             <Link href={"/account-page"} prefetch={false}>
               <Image
                 src={profile.avatar_url ?? defaultImg}
@@ -129,9 +129,7 @@ export const NavBar = () => {
                 className="rounded-full w-[30px] h-[30px] object-cover border border-green-darkbggreen"
               />
             </Link>
-          ) : (
-            ""
-          )}
+          : ""}
           {!user && (
             <CustomBtn
               title="Join"
@@ -196,7 +194,7 @@ export const NavBar = () => {
                     <Link
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className="block text-2xl font-semibold text-gray-800 capitalize hover:text-green-darkbggreen transition"
+                      className="block text-lg font-semibold text-gray-800 capitalize hover:text-green-darkbggreen transition"
                     >
                       {item.text}
                     </Link>
@@ -211,18 +209,20 @@ export const NavBar = () => {
                   animate="open"
                   className="pt-8 space-y-4"
                 >
-                  <div className="mb-4">
+                  <div className="mb-4 flex items-center justify-between">
                     <Review />
+                    {!user && (
+                      <CustomBtn
+                        title="Join"
+                        className="h-[30px] w-[100px] bg-green-darkbggreen capitalize text-green-lightbgGreen font-semibold hover:bg-opacity-90 text-lg"
+                        // onClick={() => }
+                        onClick={() => {
+                          router.replace("/login");
+                          setIsOpen(false);
+                        }}
+                      />
+                    )}
                   </div>
-                  <CustomBtn
-                    title="Join"
-                    className="w-full h-[45px] bg-green-darkbggreen capitalize text-green-lightbgGreen font-semibold hover:bg-opacity-90 text-lg"
-                    // onClick={() => }
-                    onClick={() => {
-                      router.replace("/login");
-                      setIsOpen(false);
-                    }}
-                  />
                 </motion.div>
               </div>
             </motion.div>

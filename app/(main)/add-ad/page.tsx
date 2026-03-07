@@ -10,6 +10,8 @@ import { createClient } from "@/utils/supabase/client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ENUGU_LGAS } from "@/app/(auth)/account/page";
+import { pickImageFromGallery } from "@/utils/helpers";
+import Image from "next/image";
 
 type FormValues = {
   title: string;
@@ -21,6 +23,10 @@ type FormValues = {
   city: string;
   state: string;
   address: string;
+  phone_number: string;
+  whatsapp_link: string;
+  instagram_link: string;
+  website_link: string;
 };
 
 const workTypeOptions = [
@@ -31,6 +37,7 @@ const workTypeOptions = [
 const CreateAd = () => {
   const [profile, setProfile] = useState<Iprofile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const supabase = createClient();
 
@@ -47,10 +54,14 @@ const CreateAd = () => {
       city: "",
       state: "",
       address: "",
+      phone_number: "",
+      whatsapp_link: "",
+      instagram_link: "",
+      website_link: "",
     },
     onSubmit: async (
       values: FormValues,
-      { setSubmitting }: FormikHelpers<FormValues>
+      { setSubmitting }: FormikHelpers<FormValues>,
     ) => {
       const user = (await supabase.auth.getUser()).data.user;
 
@@ -69,6 +80,10 @@ const CreateAd = () => {
         state: values.state,
         city: values.city,
         address: values.address,
+        phone_number: values.phone_number,
+        whatsapp_link: values.whatsapp_link,
+        instagram_link: values.instagram_link,
+        website_link: values.website_link,
       });
 
       if (error) {
@@ -80,6 +95,24 @@ const CreateAd = () => {
       setSubmitting(false);
     },
   });
+
+  const handleImagePick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    setIsUploadingImage(true);
+    const imageUrl = await pickImageFromGallery(file);
+    setIsUploadingImage(false);
+
+    if (!imageUrl) {
+      toast.error("Failed to upload image");
+      return;
+    }
+
+    formik.setFieldValue("media_url", imageUrl);
+    toast.success("Image uploaded successfully");
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -114,6 +147,10 @@ const CreateAd = () => {
           state: data.state || "",
           city: data.city || "",
           address: data.street || "",
+          phone_number: formik.values.phone_number,
+          whatsapp_link: formik.values.whatsapp_link,
+          instagram_link: formik.values.instagram_link,
+          website_link: formik.values.website_link,
         });
       }
 
@@ -149,23 +186,46 @@ const CreateAd = () => {
               placeholder="house cleaner"
               label="job title"
               options={workTypeOptions}
+              name="title"
               value={formik.values.title}
-              onChange={formik.handleChange("title")}
+              onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
             <div>
               <p className=" py-3 font-semibold">description</p>
 
               <textarea
+                name="body"
                 placeholder="description"
                 value={formik.values.body}
-                onChange={formik.handleChange("body")}
+                onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className=" w-full h-[160px] border px-3 py-2 border-gray-gray50 rounded-lg bg-transparent 
     outline-none
     focus:outline-none
     focus:ring-0"
               />
+            </div>
+            <div>
+              <p className=" py-3 font-semibold">Ad Image</p>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImagePick}
+                className="w-full h-[45px] border px-3 py-2 border-gray-gray50 rounded-lg bg-transparent 
+    outline-none
+    focus:outline-none
+    focus:ring-0"
+              />
+              {formik.values.media_url ?
+                <Image
+                  width={500}
+                  height={500}
+                  src={formik.values.media_url}
+                  alt="Uploaded ad media"
+                  className="mt-3 h-[300px] w-full rounded-lg object-cover border border-gray-gray50"
+                />
+              : null}
             </div>
             <div className="grid grid-cols-2 gap-14">
               <CustomInput
@@ -194,33 +254,82 @@ const CreateAd = () => {
               <CustomSelect
                 className=" w-full"
                 options={ENUGU_LGAS}
+                name="state"
                 value={formik.values.state}
                 placeholder="Select your LGA"
                 label="State"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
               <CustomInput
                 className=" w-full"
+                name="city"
                 label="City / Town"
                 value={formik.values.city}
-                onChange={formik.handleChange("city")}
-                onBlur={formik.handleBlur("city")}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 placeholder="New Heaven"
               />
             </div>
             <CustomInput
               className=" w-full"
+              label="Phone Number"
+              name="phone_number"
+              value={formik.values.phone_number}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder=""
+            />
+            <CustomInput
+              className=" w-full"
               label="Address"
+              name="address"
               value={formik.values.address}
-              onChange={formik.handleChange("address")}
-              onBlur={formik.handleBlur("address")}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="123 Independence Layout"
             />
+            <CustomInput
+              className=" w-full"
+              label="Whatsapp  Link"
+              name="whatsapp_link"
+              value={formik.values.whatsapp_link}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="123 Independence Layout"
+            />
+
+            <div className="grid grid-cols-2 gap-14">
+              <CustomInput
+                className=" w-full"
+                placeholder="https://:"
+                label="Innstagram Link (optional)"
+                name="instagram_link"
+                value={formik.values.instagram_link}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              <CustomInput
+                className=" w-full"
+                label="website link (optional)"
+                name="website_link"
+                value={formik.values.website_link}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="https://:"
+              />
+            </div>
 
             <CustomBtn
               title="Continue"
               onClick={formik.handleSubmit as any}
-              isLoading={formik.isSubmitting}
-              disable={formik.isSubmitting || !formik.isValid || !formik.dirty}
+              isLoading={formik.isSubmitting || isUploadingImage}
+              disable={
+                formik.isSubmitting ||
+                isUploadingImage ||
+                !formik.isValid ||
+                !formik.dirty
+              }
               className=" bg-green-darkbggreen h-[45px] text-green-lightbgGreen mt-4"
             />
           </form>

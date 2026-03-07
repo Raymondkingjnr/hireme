@@ -123,7 +123,7 @@ export default function Carousel({
 
   const handleDragEnd = (
     _: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
+    info: PanInfo,
   ): void => {
     const offset = info.offset.x;
     const velocity = info.velocity.x;
@@ -142,8 +142,9 @@ export default function Carousel({
     }
   };
 
-  const dragProps = loop
-    ? {}
+  const dragProps =
+    loop ?
+      {}
     : {
         dragConstraints: {
           left: -trackItemOffset * (carouselItems.length - 1),
@@ -192,9 +193,9 @@ export default function Carousel({
             <motion.div
               key={index}
               className={`relative shrink-0 flex flex-col w-[600] overflow-hidden ${
-                round
-                  ? "items-center justify-center text-center  border-0"
-                  : "items-start justify-between rounded-[12px]"
+                round ?
+                  "items-center justify-center text-center  border-0"
+                : "items-start justify-between rounded-[12px]"
               } cursor-grab active:cursor-grabbing`}
               style={{
                 width: itemWidth,
@@ -209,7 +210,7 @@ export default function Carousel({
                 width={600}
                 height={600}
                 alt=""
-                className=" w-full object-contain h-full"
+                className=" w-full object-cover h-full"
               />
             </motion.div>
           );
@@ -225,13 +226,11 @@ export default function Carousel({
             <motion.div
               key={index}
               className={`h-2 w-2 rounded-full cursor-pointer transition-colors duration-150 ${
-                currentIndex % items.length === index
-                  ? round
-                    ? "bg-white"
-                    : "bg-[#333333]"
-                  : round
-                  ? "bg-[#555]"
-                  : "bg-[rgba(51,51,51,0.4)]"
+                currentIndex % items.length === index ?
+                  round ? "bg-white"
+                  : "bg-[#333333]"
+                : round ? "bg-[#555]"
+                : "bg-[rgba(51,51,51,0.4)]"
               }`}
               animate={{
                 scale: currentIndex % items.length === index ? 1.2 : 1,
