@@ -41,7 +41,7 @@ export const stories: IReview[] = [
     service: "Multiple (Plumbing, Electrical, Painting, Cleaning)",
   },
 ];
-export function SuccessStoriesSection() {
+export const SuccessStoriesSection = () => {
   return (
     <section className="py-9 my-10 bg-white">
       <div className="container mx-auto px-4">
@@ -95,4 +95,4 @@ export function SuccessStoriesSection() {
       </div>
     </section>
   );
-}
+};

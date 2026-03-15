@@ -51,3 +51,22 @@ export const pickImageFromGallery = async (
 ): Promise<string | null> => {
   return uploadImageToCloudinary(file);
 };
+
+export const formatCurrency = (amount: number, currency: string) => {
+  if (!amount) return null;
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency || "USD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
+export const timeAgo = (dateStr: string) => {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days === 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+};

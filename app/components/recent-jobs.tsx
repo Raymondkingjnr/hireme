@@ -1,7 +1,7 @@
 import React from "react";
 import { Check, Clock } from "lucide-react";
 import { CustomBtn } from "@/app/components/custom-btn";
-export function RecentJobsSection() {
+export const RecentJobsSection = () => {
   const recentJobs = [
     {
       service: "Electrical Repair",
@@ -119,4 +119,4 @@ export function RecentJobsSection() {
       </div>
     </section>
   );
-}
+};

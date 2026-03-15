@@ -1,6 +1,6 @@
 import React from "react";
 import { AlertCircle, Clock } from "lucide-react";
-export function EmergencyServicesSection() {
+export const EmergencyServicesSection = () => {
   const emergencyServices = [
     "Emergency Plumbing",
     "Electrical Repairs",
@@ -76,4 +76,4 @@ export function EmergencyServicesSection() {
       </div>
     </section>
   );
-}
+};

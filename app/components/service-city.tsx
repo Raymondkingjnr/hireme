@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
-export function ServiceAreasSection() {
+export const ServiceAreasSection = () => {
   const areas = [
     "Independence Layout",
     "GRA (Government Reserved Area)",
@@ -49,4 +49,4 @@ export function ServiceAreasSection() {
       </div>
     </section>
   );
-}
+};

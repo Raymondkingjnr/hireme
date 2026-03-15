@@ -7,7 +7,7 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
-export function Footer() {
+export const Footer = () => {
   return (
     <footer className="bg-green-darkbggreen text-white pt-16 pb-8 mt-5">
       <div className="container mx-auto px-4">
@@ -219,4 +219,4 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+};

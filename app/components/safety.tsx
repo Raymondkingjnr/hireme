@@ -1,6 +1,6 @@
 import React from "react";
 import { Shield, CreditCard, Undo, HeadphonesIcon } from "lucide-react";
-export function TrustSafetySection() {
+export const TrustSafetySection = () => {
   return (
     <section className="py-16 bg-white my-10">
       <div className="container mx-auto">
@@ -35,9 +35,8 @@ export function TrustSafetySection() {
             </div>
             <h3 className="text-xl font-semibold mb-3">Secure Payments</h3>
             <p className="text-gray-600">
-              Your financial information is protected with bank-level
-              encryption. Pay safely through our platform and never worry about
-              cash transactions.
+              Your financial information is protected with as transactions is
+              strictly between you and the artisian.
             </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center text-center">
@@ -70,4 +69,4 @@ export function TrustSafetySection() {
       </div>
     </section>
   );
-}
+};

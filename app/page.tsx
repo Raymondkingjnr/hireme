@@ -11,19 +11,20 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useMemo, useState } from "react";
-import AnimatedList from "@/components/AnimatedList";
-import { CustomBtn } from "./components/custom-btn";
 import { BadgeCheckIcon } from "lucide-react";
-import { TrustSafetySection } from "@/components/safety";
-import { RecentJobsSection } from "@/components/recent-jobs";
-import { Faq } from "@/components/faq";
 import { ReferralSection } from "./components/referral";
-import { ServiceAreasSection } from "./components/service-city";
-import { EmergencyServicesSection } from "./components/emergency";
-import { stories, SuccessStoriesSection } from "./components/stories";
-import { NavBar } from "./components/nav-bar";
-import { Footer } from "./components/footer";
 import { useRouter, useParams } from "next/navigation";
+import {
+  SuccessStoriesSection,
+  ServiceAreasSection,
+  NavBar,
+  Footer,
+  Faq,
+  RecentJobsSection,
+  TrustSafetySection,
+  CustomBtn,
+  EmergencyServicesSection,
+} from "@/app/components";
 
 type Trade = {
   id: string;
@@ -63,7 +64,7 @@ export default function Home() {
     }
 
     return allServices.filter((service) =>
-      service.name.toLowerCase().includes(searchQuery.toLowerCase())
+      service.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [searchQuery]);
   const router = useRouter();
@@ -103,7 +104,12 @@ export default function Home() {
                 key={t.id}
                 className=" border-[1px] border-gray-50 w-fit px-2 py-1 rounded-full cursor-pointer hover:bg-green-lightbgGreen hover:border-transparent transition-all duration-300"
               >
-                <p className="font-semibold text-gray-50 text-sm hover:text-gray-700">
+                <p
+                  className="font-semibold text-gray-50 text-sm hover:text-gray-700"
+                  onClick={() =>
+                    router.push(`/search?q=${encodeURIComponent(t.id)}`)
+                  }
+                >
                   {t.label}
                 </p>
               </div>
@@ -124,7 +130,13 @@ export default function Home() {
                     <CommandGroup heading="Popular Services">
                       {displayedServices.map((service) => (
                         <CommandItem key={service.name}>
-                          <span onClick={() => router.push("/market-place")}>
+                          <span
+                            onClick={() =>
+                              router.push(
+                                `/search?q=${encodeURIComponent(service.name)}`,
+                              )
+                            }
+                          >
                             {service.name}
                           </span>
                           <CommandShortcut>{service.shortcut}</CommandShortcut>
@@ -197,7 +209,7 @@ export default function Home() {
 
         <ServiceAreasSection />
 
-        <ReferralSection />
+        {/* <ReferralSection /> */}
 
         <SuccessStoriesSection />
 

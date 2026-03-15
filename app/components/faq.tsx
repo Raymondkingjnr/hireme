@@ -56,7 +56,7 @@ const faqs = [
   },
 ];
 
-export function Faq() {
+export const Faq = () => {
   return (
     <section className=" my-10">
       <div className=" mb-5">
@@ -86,4 +86,4 @@ export function Faq() {
       </Accordion>
     </section>
   );
-}
+};
